@@ -23,7 +23,7 @@ class Quarantine(object):
         self.__parent__ = parent
 
     def empty(self):
-        pending = PendingQueue('', self.__parent__.pending_db_path)
+        pending = self._pending_queue()
         empty = True
         for q in pending.iter_quarantine():
             empty = False
@@ -31,3 +31,5 @@ class Quarantine(object):
         del pending
         return empty
 
+    def _pending_queue(self):
+        return PendingQueue('', self.__parent__.pending_db_path)
