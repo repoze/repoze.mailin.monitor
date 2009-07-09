@@ -60,3 +60,33 @@ class QuarantineModelTests(unittest.TestCase):
         q._pending_queue = get_pending_queue
         self.failIf(q.empty())
 
+class QuarantineStatusViewTests(unittest.TestCase):
+    def setUp(self):
+        cleanUp()
+
+    def tearDown(self):
+        cleanUp()
+
+    def test_ok(self):
+        from repoze.bfg.testing import DummyRequest
+        from repoze.mailin.monitor.views import quarantine_status_view
+        context = DummyQuarantine()
+        response = quarantine_status_view(context, DummyRequest())
+        self.assertEquals(response.body, 'OK')
+
+    def test_error(self):
+        from repoze.bfg.testing import DummyRequest
+        from repoze.mailin.monitor.views import quarantine_status_view
+        context = DummyQuarantine('x', 'y')
+        response = quarantine_status_view(context, DummyRequest())
+        self.assertEquals(response.body, 'ERROR')
+
+from repoze.bfg.testing import DummyModel
+class DummyQuarantine(DummyModel):
+    def __init__(self, *message_ids):
+        self.message_ids = message_ids
+
+    def empty(self):
+        return not self.message_ids
+
+
