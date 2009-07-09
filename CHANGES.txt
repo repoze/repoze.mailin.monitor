@@ -1,0 +1,7 @@
+repoze.mailin.monitor Changelog
+===============================
+
+Unreleased
+----------
+
+- Initial release
