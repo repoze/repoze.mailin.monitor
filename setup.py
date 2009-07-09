@@ -25,6 +25,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 INSTALL_REQUIRES = [
+    'repoze.bfg',
     'repoze.mailin',
     'WebOb'
     ]
@@ -54,5 +55,7 @@ setup(name='repoze.mailin.monitor',
       install_requires=INSTALL_REQUIRES,
       test_suite="repoze.mailin.monitor",
       entry_points = """
+      [paste.app_factory]
+      make_app = repoze.mailin.monitor.application:make_app
       """
       )

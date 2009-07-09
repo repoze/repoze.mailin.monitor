@@ -1,0 +1,12 @@
+<configure xmlns="http://namespaces.repoze.org/bfg">
+
+  <!-- this must be included for the view declarations to work -->
+  <include package="repoze.bfg.includes" />
+
+  <view
+    for=".models.Quarantine"
+    view=".views.quarantine_status_view"
+    name="status.txt"
+    />
+
+</configure>
