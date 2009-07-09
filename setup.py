@@ -26,7 +26,7 @@ README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 INSTALL_REQUIRES = [
     'repoze.mailin',
-    'webob'
+    'WebOb'
     ]
 
 setup(name='repoze.mailin.monitor',
@@ -51,8 +51,7 @@ setup(name='repoze.mailin.monitor',
       namespace_packages=['repoze','repoze.mailin'],
       zip_safe=False,
       tests_require = [],
-      install_requires=['repoze.mailin',
-                       ],
+      install_requires=INSTALL_REQUIRES,
       test_suite="repoze.mailin.monitor",
       entry_points = """
       """
