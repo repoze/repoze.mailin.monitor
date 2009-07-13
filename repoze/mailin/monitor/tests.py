@@ -186,6 +186,26 @@ class QuarantineListViewTests(unittest.TestCase):
              'url': 'http://example.com/messages/xyz'},
             ])
 
+class ShowMessageViewTests(unittest.TestCase):
+    def setUp(self):
+        cleanUp()
+
+    def tearDown(self):
+        cleanUp()
+
+    def test_it(self):
+        from repoze.bfg.testing import DummyModel
+        from repoze.bfg.testing import DummyRequest
+        from repoze.bfg.testing import registerDummyRenderer
+        context = DummyModel()
+        context.message_id = 'foo'
+        context.message = 'bar'
+        renderer = registerDummyRenderer('templates/show_message.pt')
+        from repoze.mailin.monitor.views import show_message_view
+        response = show_message_view(context, DummyRequest())
+        self.assertEqual(renderer.message_id, 'foo')
+        self.assertEqual(renderer.raw, 'bar')
+
 from repoze.bfg.testing import DummyModel
 class DummyQuarantine(DummyModel):
     def __init__(self, *message_ids):
