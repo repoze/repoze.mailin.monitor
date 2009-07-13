@@ -1,3 +1,7 @@
+from repoze.bfg.security import Allow
+from repoze.bfg.security import Deny
+from repoze.bfg.security import Everyone
+
 from repoze.mailin.pending import PendingQueue
 
 class MailInMonitor(object):
@@ -16,6 +20,13 @@ class MailInMonitor(object):
             return Quarantine(self)
         raise KeyError(name)
 
+    @property
+    def __acl__(self):
+        return [
+            (Allow, self.required_principal, ('view', 'manage')),
+            (Deny, Everyone, ('view', 'manage'))
+            ]
+
 class Quarantine(object):
     __name__ = 'quarantine'
 
@@ -33,3 +44,9 @@ class Quarantine(object):
 
     def _pending_queue(self):
         return PendingQueue('', self.__parent__.pending_db_path)
+
+    def __iter__(self):
+        pending = self._pending_queue()
+        for message_id in pending.iter_quarantine():
+            yield message_id, pending.get_error_message(message_id)
+        del pending

@@ -1,4 +1,6 @@
 from webob import Response
+from repoze.bfg.chameleon_zpt import render_template_to_response
+from repoze.bfg.url import model_url
 
 def quarantine_status_view(quarantine, request):
     """
@@ -8,3 +10,21 @@ def quarantine_status_view(quarantine, request):
         return Response('OK')
 
     return Response('ERROR')
+
+def quarantine_list_view(quarantine, request):
+    """
+    Lists messages in quarantine.
+    """
+    messages = []
+    for message_id, error_msg in quarantine:
+        url = model_url(quarantine.__parent__, request, 'messages', message_id)
+        messages.append({
+            'message_id': message_id,
+            'error_msg': error_msg,
+            'url': url
+            })
+
+    return render_template_to_response(
+        'templates/quarantine_list.pt',
+        messages=messages
+    )

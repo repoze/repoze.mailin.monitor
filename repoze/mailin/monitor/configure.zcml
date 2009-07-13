@@ -9,4 +9,10 @@
     name="status.txt"
     />
 
+  <view
+    for=".models.Quarantine"
+    view=".views.quarantine_list_view"
+    permission="view"
+    />
+
 </configure>
