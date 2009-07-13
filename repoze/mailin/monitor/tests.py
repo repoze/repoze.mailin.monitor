@@ -27,6 +27,22 @@ class MailInMonitorModelTests(unittest.TestCase):
         o = MailInMonitor('x', 'y', 'z')
         self.assertRaises(KeyError, o.__getitem__, 'foo')
 
+    def test_acl(self):
+        from repoze.bfg.security import Allow
+        from repoze.bfg.security import Deny
+        from repoze.bfg.security import Everyone
+        from repoze.mailin.monitor.models import MailInMonitor
+        o = MailInMonitor('x', 'y', 'z')
+        self.assertEqual(o.__acl__, [
+            (Allow, 'z', ('view', 'manage')),
+            (Deny, Everyone, ('view', 'manage'))
+            ])
+
+    def test_no_acl(self):
+        from repoze.mailin.monitor.models import MailInMonitor
+        o = MailInMonitor('x', 'y')
+        self.assertEqual(o.__acl__, None)
+
 class QuarantineModelTests(unittest.TestCase):
     def setUp(self):
         cleanUp()
@@ -59,6 +75,20 @@ class QuarantineModelTests(unittest.TestCase):
         q = Quarantine(None)
         q._pending_queue = get_pending_queue
         self.failIf(q.empty())
+
+    def test_iter(self):
+        from repoze.mailin.monitor.models import Quarantine
+        from repoze.mailin.pending import PendingQueue
+        pending = PendingQueue(None, ':memory:')
+        def get_pending_queue():
+            return pending
+        pending.quarantine('xyz', 'error_msg')
+        pending.quarantine('abc', 'it broke')
+        q = Quarantine(None)
+        q._pending_queue = get_pending_queue
+        messages = list(q)
+        self.assertEqual(2, len(messages))
+        self.assertEqual([('xyz', 'error_msg'), ('abc', 'it broke')], messages)
 
 class QuarantineStatusViewTests(unittest.TestCase):
     def setUp(self):

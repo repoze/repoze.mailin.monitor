@@ -22,6 +22,9 @@ class MailInMonitor(object):
 
     @property
     def __acl__(self):
+        if self.required_principal is None:
+            return None
+
         return [
             (Allow, self.required_principal, ('view', 'manage')),
             (Deny, Everyone, ('view', 'manage'))
