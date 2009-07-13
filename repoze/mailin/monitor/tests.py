@@ -111,12 +111,40 @@ class QuarantineStatusViewTests(unittest.TestCase):
         response = quarantine_status_view(context, DummyRequest())
         self.assertEquals(response.body, 'ERROR')
 
+class QuarantineListViewTests(unittest.TestCase):
+    def setUp(self):
+        cleanUp()
+
+    def tearDown(self):
+        cleanUp()
+
+    def test_it(self):
+        from repoze.bfg.testing import DummyRequest
+        from repoze.bfg.testing import registerDummyRenderer
+        from repoze.mailin.monitor.views import quarantine_list_view
+        context = DummyQuarantine('abc', 'xyz')
+        renderer = registerDummyRenderer('templates/quarantine_list.pt')
+        response = quarantine_list_view(context, DummyRequest())
+        self.assertEqual(renderer.messages, [
+            {'message_id': 'abc',
+             'error_msg': 'error in abc',
+             'url': 'http://example.com/messages/abc'},
+            {'message_id': 'xyz',
+             'error_msg': 'error in xyz',
+             'url': 'http://example.com/messages/xyz'},
+            ])
+
 from repoze.bfg.testing import DummyModel
 class DummyQuarantine(DummyModel):
     def __init__(self, *message_ids):
+        monitor = DummyModel()
+        monitor['quarantine'] = self
         self.message_ids = message_ids
 
     def empty(self):
         return not self.message_ids
 
+    def __iter__(self):
+        for message_id in self.message_ids:
+            yield message_id, 'error in %s' % message_id
 
