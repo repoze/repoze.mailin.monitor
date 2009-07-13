@@ -2,6 +2,7 @@ from repoze.bfg.security import Allow
 from repoze.bfg.security import Deny
 from repoze.bfg.security import Everyone
 
+from repoze.mailin.maildir import MaildirStore
 from repoze.mailin.pending import PendingQueue
 
 class MailInMonitor(object):
@@ -18,6 +19,10 @@ class MailInMonitor(object):
     def __getitem__(self, name):
         if name == 'quarantine':
             return Quarantine(self)
+
+        if name == 'messages':
+            return Messages(self)
+
         raise KeyError(name)
 
     @property
@@ -53,3 +58,23 @@ class Quarantine(object):
         for message_id in pending.iter_quarantine():
             yield message_id, pending.get_error_message(message_id)
         del pending
+
+class Messages(object):
+    __name__ = 'messages'
+
+    def __init__(self, parent):
+        self.__parent__ = parent
+
+    def _mail_store(self):
+        return MaildirStore(self.__parent__.maildir_path)
+
+    def __getitem__(self, message_id):
+        store = self._mail_store()
+        return Message(self, message_id, store[message_id])
+
+class Message(object):
+    def __init__(self, parent, message_id, message):
+        self.__parent__ = parent
+        self.__name__ = self.message_id = message_id
+        self.message  = message
+

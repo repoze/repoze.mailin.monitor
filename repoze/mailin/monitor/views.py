@@ -28,3 +28,14 @@ def quarantine_list_view(quarantine, request):
         'templates/quarantine_list.pt',
         messages=messages
     )
+
+def show_message_view(message, request):
+    """
+    Shows a message in the mail store.
+    """
+    return render_template_to_response(
+        'templates/show_message.pt',
+        message_id=message.message_id,
+        raw=str(message.message)
+        )
+

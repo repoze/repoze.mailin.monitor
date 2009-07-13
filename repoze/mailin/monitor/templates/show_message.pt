@@ -1,0 +1,14 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <head>
+    <title>Mail-in Monitor: Message: ${message_id}</title>
+  </head>
+  <body>
+    <h1>Mail-in Monitor: Message: ${message_id}</h1>
+
+    <pre>${raw}
+    </pre>
+
+  </body>
+</html>

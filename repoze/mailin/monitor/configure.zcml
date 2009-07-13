@@ -15,4 +15,9 @@
     permission="view"
     />
 
+  <view
+    for=".models.Message"
+    view=".views.show_message_view"
+    permission="view"
+    />
 </configure>
