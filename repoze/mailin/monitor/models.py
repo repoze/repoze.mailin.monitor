@@ -10,11 +10,9 @@ class MailInMonitor(object):
     __parent__ = None
 
     def __init__(self, pending_db_path,
-                 maildir_path,
-                 required_principal=None):
+                 maildir_path):
         self.pending_db_path = pending_db_path
         self.maildir_path = maildir_path
-        self.required_principal = required_principal
 
     def __getitem__(self, name):
         if name == 'quarantine':
@@ -24,16 +22,6 @@ class MailInMonitor(object):
             return Messages(self)
 
         raise KeyError(name)
-
-    @property
-    def __acl__(self):
-        if self.required_principal is None:
-            return None
-
-        return [
-            (Allow, self.required_principal, ('view', 'manage')),
-            (Deny, Everyone, ('view', 'manage'))
-            ]
 
 class Quarantine(object):
     __name__ = 'quarantine'

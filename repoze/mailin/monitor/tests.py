@@ -11,43 +11,26 @@ class MailInMonitorModelTests(unittest.TestCase):
 
     def test_init(self):
         from repoze.mailin.monitor.models import MailInMonitor
-        o = MailInMonitor('x', 'y', 'z')
+        o = MailInMonitor('x', 'y')
         self.assertEqual(o.pending_db_path, 'x')
         self.assertEqual(o.maildir_path, 'y')
-        self.assertEqual(o.required_principal, 'z')
 
     def test_get_quarantine(self):
         from repoze.mailin.monitor.models import MailInMonitor
         from repoze.mailin.monitor.models import Quarantine
-        o = MailInMonitor('x', 'y', 'z')
+        o = MailInMonitor('x', 'y')
         self.failUnless(isinstance(o['quarantine'], Quarantine))
 
     def test_get_messages(self):
         from repoze.mailin.monitor.models import MailInMonitor
         from repoze.mailin.monitor.models import Messages
-        o = MailInMonitor('x', 'y', 'z')
+        o = MailInMonitor('x', 'y')
         self.failUnless(isinstance(o['messages'], Messages))
 
     def test_key_error(self):
         from repoze.mailin.monitor.models import MailInMonitor
-        o = MailInMonitor('x', 'y', 'z')
-        self.assertRaises(KeyError, o.__getitem__, 'foo')
-
-    def test_acl(self):
-        from repoze.bfg.security import Allow
-        from repoze.bfg.security import Deny
-        from repoze.bfg.security import Everyone
-        from repoze.mailin.monitor.models import MailInMonitor
-        o = MailInMonitor('x', 'y', 'z')
-        self.assertEqual(o.__acl__, [
-            (Allow, 'z', ('view', 'manage')),
-            (Deny, Everyone, ('view', 'manage'))
-            ])
-
-    def test_no_acl(self):
-        from repoze.mailin.monitor.models import MailInMonitor
         o = MailInMonitor('x', 'y')
-        self.assertEqual(o.__acl__, None)
+        self.assertRaises(KeyError, o.__getitem__, 'foo')
 
 class QuarantineModelTests(unittest.TestCase):
     def setUp(self):
@@ -66,7 +49,7 @@ class QuarantineModelTests(unittest.TestCase):
         from repoze.mailin.monitor.models import MailInMonitor
         from repoze.mailin.monitor.models import Quarantine
         from repoze.mailin.pending import PendingQueue
-        m = MailInMonitor(':memory:', None, None)
+        m = MailInMonitor(':memory:', None)
         q = Quarantine(m)
         self.failUnless(q.empty())
 
