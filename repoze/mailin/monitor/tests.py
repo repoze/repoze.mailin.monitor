@@ -22,6 +22,12 @@ class MailInMonitorModelTests(unittest.TestCase):
         o = MailInMonitor('x', 'y', 'z')
         self.failUnless(isinstance(o['quarantine'], Quarantine))
 
+    def test_get_messages(self):
+        from repoze.mailin.monitor.models import MailInMonitor
+        from repoze.mailin.monitor.models import Messages
+        o = MailInMonitor('x', 'y', 'z')
+        self.failUnless(isinstance(o['messages'], Messages))
+
     def test_key_error(self):
         from repoze.mailin.monitor.models import MailInMonitor
         o = MailInMonitor('x', 'y', 'z')
@@ -90,6 +96,52 @@ class QuarantineModelTests(unittest.TestCase):
         self.assertEqual(2, len(messages))
         self.assertEqual([('xyz', 'error_msg'), ('abc', 'it broke')], messages)
 
+class MessagesModelTests(unittest.TestCase):
+    _tempdir = None
+
+    def setUp(self):
+        cleanUp()
+
+    def tearDown(self):
+        cleanUp()
+
+        if self._tempdir is not None:
+            import shutil
+            shutil.rmtree(self._tempdir)
+
+    def _getTempdir(self):
+        import tempfile
+        if self._tempdir is None:
+            self._tempdir = tempfile.mkdtemp()
+        return self._tempdir
+
+    def test_init(self):
+        from repoze.mailin.monitor.models import Messages
+        parent = object()
+        o = Messages(parent)
+        self.assertEqual('messages', o.__name__)
+        self.failUnless(o.__parent__ is parent)
+
+    def test_get_mail_store(self):
+        from repoze.bfg.testing import DummyModel
+        from repoze.mailin.maildir import MaildirStore
+        from repoze.mailin.monitor.models import Messages
+        monitor = DummyModel()
+        monitor.maildir_path = self._getTempdir()
+        o = Messages(monitor)
+        self.failUnless(isinstance(o._mail_store(), MaildirStore))
+
+    def test_get_existing_message(self):
+        from repoze.mailin.monitor.models import Messages
+        from repoze.mailin.monitor.models import Message
+        store = DummyMaildirStore(abc='message')
+        def get_store():
+            return store
+        o = Messages(None)
+        o._mail_store = get_store
+        self.failUnless(isinstance(o['abc'], Message))
+        self.assertEqual(str(o['abc'].message), 'message')
+
 class QuarantineStatusViewTests(unittest.TestCase):
     def setUp(self):
         cleanUp()
@@ -137,6 +189,7 @@ class QuarantineListViewTests(unittest.TestCase):
 from repoze.bfg.testing import DummyModel
 class DummyQuarantine(DummyModel):
     def __init__(self, *message_ids):
+        DummyModel.__init__(self)
         monitor = DummyModel()
         monitor['quarantine'] = self
         self.message_ids = message_ids
@@ -148,3 +201,16 @@ class DummyQuarantine(DummyModel):
         for message_id in self.message_ids:
             yield message_id, 'error in %s' % message_id
 
+class DummyMaildirStore(DummyModel):
+    def __init__(self, **kw):
+        DummyModel.__init__(self)
+        for k,v in kw.items():
+            self[k] = DummyMessage(v)
+
+class DummyMessage(DummyModel):
+    def __init__(self, message):
+        DummyModel.__init__(self)
+        self.message = message
+
+    def __str__(self):
+        return self.message
