@@ -1,4 +1,4 @@
-from repoze.bfg.router import make_app as bfg_make_app
+from pyramid_zcml import make_app as bfg_make_app
 from repoze.mailin.monitor.models import MailInMonitor
 
 import repoze.mailin.monitor

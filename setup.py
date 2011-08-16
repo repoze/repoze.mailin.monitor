@@ -28,7 +28,7 @@ except:
     CHANGES = ''
     
 INSTALL_REQUIRES = [
-    'repoze.bfg',
+    'pyramid',
     'repoze.mailin',
     'WebOb'
     ]

@@ -1,6 +1,6 @@
 import unittest
 
-from repoze.bfg.testing import cleanUp
+from pyramid.testing import cleanUp
 
 class MailInMonitorModelTests(unittest.TestCase):
     def setUp(self):
@@ -106,7 +106,7 @@ class MessagesModelTests(unittest.TestCase):
         self.failUnless(o.__parent__ is parent)
 
     def test_get_mail_store(self):
-        from repoze.bfg.testing import DummyModel
+        from pyramid.testing import DummyModel
         from repoze.mailin.maildir import MaildirStore
         from repoze.mailin.monitor.models import Messages
         monitor = DummyModel()
@@ -133,14 +133,14 @@ class QuarantineStatusViewTests(unittest.TestCase):
         cleanUp()
 
     def test_ok(self):
-        from repoze.bfg.testing import DummyRequest
+        from pyramid.testing import DummyRequest
         from repoze.mailin.monitor.views import quarantine_status_view
         context = DummyQuarantine()
         response = quarantine_status_view(context, DummyRequest())
         self.assertEquals(response.body, 'OK')
 
     def test_error(self):
-        from repoze.bfg.testing import DummyRequest
+        from pyramid.testing import DummyRequest
         from repoze.mailin.monitor.views import quarantine_status_view
         context = DummyQuarantine('x', 'y')
         response = quarantine_status_view(context, DummyRequest())
@@ -154,8 +154,8 @@ class QuarantineListViewTests(unittest.TestCase):
         cleanUp()
 
     def test_it(self):
-        from repoze.bfg.testing import DummyRequest
-        from repoze.bfg.testing import registerDummyRenderer
+        from pyramid.testing import DummyRequest
+        from pyramid.testing import registerDummyRenderer
         from repoze.mailin.monitor.views import quarantine_list_view
         context = DummyQuarantine('abc', 'xyz')
         renderer = registerDummyRenderer('templates/quarantine_list.pt')
@@ -177,9 +177,9 @@ class ShowMessageViewTests(unittest.TestCase):
         cleanUp()
 
     def test_it(self):
-        from repoze.bfg.testing import DummyModel
-        from repoze.bfg.testing import DummyRequest
-        from repoze.bfg.testing import registerDummyRenderer
+        from pyramid.testing import DummyModel
+        from pyramid.testing import DummyRequest
+        from pyramid.testing import registerDummyRenderer
         context = DummyModel()
         context.message_id = 'foo'
         context.message = 'bar'
@@ -189,7 +189,7 @@ class ShowMessageViewTests(unittest.TestCase):
         self.assertEqual(renderer.message_id, 'foo')
         self.assertEqual(renderer.raw, 'bar')
 
-from repoze.bfg.testing import DummyModel
+from pyramid.testing import DummyModel
 class DummyQuarantine(DummyModel):
     def __init__(self, *message_ids):
         DummyModel.__init__(self)

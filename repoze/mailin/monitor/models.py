@@ -1,6 +1,6 @@
-from repoze.bfg.security import Allow
-from repoze.bfg.security import Deny
-from repoze.bfg.security import Everyone
+from pyramid.security import Allow
+from pyramid.security import Deny
+from pyramid.security import Everyone
 
 from repoze.mailin.maildir import MaildirStore
 from repoze.mailin.pending import PendingQueue
