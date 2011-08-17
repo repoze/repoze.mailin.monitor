@@ -1,12 +1,14 @@
 repoze.mailin.monitor Changelog
 ===============================
 
-Unreleased
-----------
+0.2 (2011-08-17)
+----------------
 
 - Depend on Pyramid rather than BFG.
 
 - Moved to GitHub.
+
+- Added tox.ini for easier testing.
 
 0.1 (2009-07-13)
 ----------------

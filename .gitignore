@@ -6,6 +6,6 @@ env26/
 .coverage
 dist/
 *~
-.tox
+.tox/
 nosetests.xml
 repoze/mailin/monitor/coverage.xml

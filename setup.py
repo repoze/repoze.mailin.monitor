@@ -33,7 +33,7 @@ INSTALL_REQUIRES = [
     ]
 
 setup(name='repoze.mailin.monitor',
-      version='0.2-dev',
+      version='0.2',
       description='WSGI Application for monitoring repoze.mailin',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
