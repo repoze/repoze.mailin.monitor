@@ -48,7 +48,6 @@ class QuarantineModelTests(unittest.TestCase):
     def test_empty_yes(self):
         from repoze.mailin.monitor.models import MailInMonitor
         from repoze.mailin.monitor.models import Quarantine
-        from repoze.mailin.pending import PendingQueue
         m = MailInMonitor(':memory:', None)
         q = Quarantine(m)
         self.failUnless(q.empty())
@@ -148,18 +147,18 @@ class QuarantineStatusViewTests(unittest.TestCase):
 
 class QuarantineListViewTests(unittest.TestCase):
     def setUp(self):
-        cleanUp()
+        self.config = cleanUp()
 
     def tearDown(self):
         cleanUp()
 
     def test_it(self):
         from pyramid.testing import DummyRequest
-        from pyramid.testing import registerDummyRenderer
         from repoze.mailin.monitor.views import quarantine_list_view
         context = DummyQuarantine('abc', 'xyz')
-        renderer = registerDummyRenderer('templates/quarantine_list.pt')
-        response = quarantine_list_view(context, DummyRequest())
+        renderer = self.config.testing_add_renderer(
+            'templates/quarantine_list.pt')
+        quarantine_list_view(context, DummyRequest())
         self.assertEqual(renderer.messages, [
             {'message_id': 'abc',
              'error_msg': 'error in abc',
@@ -171,7 +170,7 @@ class QuarantineListViewTests(unittest.TestCase):
 
 class ShowMessageViewTests(unittest.TestCase):
     def setUp(self):
-        cleanUp()
+        self.config = cleanUp()
 
     def tearDown(self):
         cleanUp()
@@ -179,13 +178,12 @@ class ShowMessageViewTests(unittest.TestCase):
     def test_it(self):
         from pyramid.testing import DummyModel
         from pyramid.testing import DummyRequest
-        from pyramid.testing import registerDummyRenderer
         context = DummyModel()
         context.message_id = 'foo'
         context.message = 'bar'
-        renderer = registerDummyRenderer('templates/show_message.pt')
+        renderer = self.config.testing_add_renderer('templates/show_message.pt')
         from repoze.mailin.monitor.views import show_message_view
-        response = show_message_view(context, DummyRequest())
+        show_message_view(context, DummyRequest())
         self.assertEqual(renderer.message_id, 'foo')
         self.assertEqual(renderer.raw, 'bar')
 

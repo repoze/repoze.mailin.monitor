@@ -12,8 +12,6 @@
 #
 ##############################################################################
 
-__version__ = '0.2-dev'
-
 import os
 
 from setuptools import setup, find_packages
@@ -29,12 +27,13 @@ except:
     
 INSTALL_REQUIRES = [
     'pyramid',
+    'pyramid_zcml',
     'repoze.mailin',
     'WebOb'
     ]
 
 setup(name='repoze.mailin.monitor',
-      version=__version__,
+      version='0.2-dev',
       description='WSGI Application for monitoring repoze.mailin',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[

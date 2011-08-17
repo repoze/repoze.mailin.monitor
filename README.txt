@@ -6,7 +6,7 @@ about a mailin store using repoze.mailin.  Currently only data about the
 quarantined messages is available and is intended help detect and troubleshoot
 problems with mailin.
 
-repoze.mailin.monitor is implemented as a very simple repoze.bfg application
+repoze.mailin.monitor is implemented as a very simple Pyramid application
 and as such should be pretty extensible.  This will need to be extended in
 order to have much of a security story.
 

@@ -4,6 +4,8 @@ repoze.mailin.monitor Changelog
 Unreleased
 ----------
 
+- Depend on Pyramid rather than BFG.
+
 - Moved to GitHub.
 
 0.1 (2009-07-13)

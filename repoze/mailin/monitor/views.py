@@ -1,5 +1,5 @@
 from webob import Response
-from pyramid.chameleon_zpt import render_template_to_response
+from pyramid.renderers import render_to_response
 from pyramid.url import resource_url
 
 def quarantine_status_view(quarantine, request):
@@ -25,18 +25,20 @@ def quarantine_list_view(quarantine, request):
             'url': url
             })
 
-    return render_template_to_response(
+    return render_to_response(
         'templates/quarantine_list.pt',
-        messages=messages
+        dict(messages=messages),
+        request=request
     )
 
 def show_message_view(message, request):
     """
     Shows a message in the mail store.
     """
-    return render_template_to_response(
+    return render_to_response(
         'templates/show_message.pt',
-        message_id=message.message_id,
-        raw=str(message.message)
+        dict(message_id=message.message_id,
+             raw=str(message.message)),
+        request
         )
 
